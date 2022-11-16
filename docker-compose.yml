@@ -1,0 +1,41 @@
+version: '3'
+services:
+  web:
+    image: nginx:1.17
+    container_name: sde_project_1 
+    depends_on:
+      - docker-mysql
+      - php
+    links:
+      - docker-mysql
+      - php
+    volumes:
+      - ./webcontent:/var/www/html
+      - ./nginx:/etc/nginx/conf.d/
+    ports:
+      - "8080:80"
+  php:
+    image: php:7.2-fpm
+    container_name: sde_project_3
+    volumes:
+      - ./webcontent:/var/www/html
+      - ./php:/usr/local/etc/php/php.ini
+    depends_on:
+      - docker-mysql
+
+  docker-mysql:
+    image: mysql:5.7
+    container_name: sde_project_2
+    restart: "no"
+    environment:
+      - MYSQL_DATABASE=docker_sde
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_USER=node1
+      - MYSQL_PASSWORD=root123
+    ports:
+      - "3306:3306"
+    volumes:
+      - /dbdata:/var/lib/mysql
+volumes:
+  Dbdata:
+    
